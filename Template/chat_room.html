@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h2>💬 Chat Room: {{ room_name }}</h2>
+
+    <!-- 🔔 Notifications -->
+    <div id="notifications" style="color: green; margin-bottom: 10px;"></div>
+
+    <!-- 💬 Chat Messages -->
+    <div id="chat-box" style="
+        height: 300px;
+        overflow-y: scroll;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+    ">
+    </div>
+
+    <!-- ✍️ Input -->
+    <input id="message-input" type="text" placeholder="Type message..."
+           style="width: 80%; padding: 10px;">
+    
+    <button onclick="sendMessage()" style="padding: 10px;">Send</button>
+</div>
+
+<script>
+    const roomName = "{{ room_name }}";
+    const username = "{{ request.user.username }}";
+
+    const socket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+    );
+
+    // 📩 Receive messages
+    socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+        // 🔔 Join/Leave Notification
+        if (data.type === "join" || data.type === "leave") {
+            showNotification(data.message);
+        } 
+        else {
+            showMessage(data.user, data.message);
+        }
+    };
+
+    // 💬 Show message
+    function showMessage(user, message) {
+        const chatBox = document.getElementById("chat-box");
+
+        const msg = document.createElement("p");
+        msg.innerHTML = `<b>${user}:</b> ${message}`;
+
+        chatBox.appendChild(msg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // 🔔 Show notification (auto remove)
+    function showNotification(message) {
+        const container = document.getElementById("notifications");
+
+        const notif = document.createElement("p");
+        notif.innerText = message;
+
+        container.appendChild(notif);
+
+        setTimeout(() => {
+            notif.remove();
+        }, 3000); // ⏱️ 3 seconds
+    }
+
+    // 📤 Send message
+    function sendMessage() {
+        const input = document.getElementById("message-input");
+
+        if (input.value.trim() === "") return;
+
+        socket.send(JSON.stringify({
+            'message': input.value
+        }));
+
+        input.value = "";
+    }
+
+    // ⌨️ Enter key support
+    document.getElementById("message-input")
+        .addEventListener("keyup", function(e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+</script>
+
+{% endblock %}

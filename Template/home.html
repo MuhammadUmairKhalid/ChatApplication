@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Welcome {{ request.user.username }}</h2>
+
+    <h3>Enter Chat Room</h3>
+
+    <form method="GET" action="/chat/">
+        <input type="text" name="room" placeholder="Enter room name" required>
+        <button type="submit">Join</button>
+    </form>
+
+    <br>
+
+    <a href="{% url 'logout_page' %}">
+        <button style="background:red;color:white;">Logout</button>
+    </a>
+</div>
+{% endblock %}
