@@ -15,8 +15,7 @@ from channels.auth import AuthMiddlewareStack
 import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mainapp.settings')
-print(django.setup())
-print(get_asgi_application())
+django.setup()
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
