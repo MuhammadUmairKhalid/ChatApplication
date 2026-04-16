@@ -29,8 +29,10 @@
     const roomName = "{{ room_name }}";
     const username = "{{ request.user.username }}";
 
+    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+
     const socket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+        protocol + window.location.host + '/ws/chat/' + roomName + '/'
     );
 
     // 📩 Receive messages
