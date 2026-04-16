@@ -30,7 +30,7 @@ DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 CSRF_TRUSTED_ORIGINS = [
-    "https://chatapplication-2-9ci1.onrender.com",
+    "https://chatapplication-3-kw1v.onrender.com",
 ]
 
 
