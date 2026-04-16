@@ -29,7 +29,9 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
-print("Allowed host",ALLOWED_HOSTS)
+CSRF_TRUSTED_ORIGINS = [
+    "https://chatapplication-2-9ci1.onrender.com",
+]
 
 
 # Application definition
